@@ -91,7 +91,7 @@ body {
 /* ==============
     MOBILE: Menu
    ============== */
-
+/*
 nav ul {
     margin: 0;
     padding: 0;
@@ -119,6 +119,7 @@ nav a:visited {
 nav a:hover {
     text-decoration: underline;
 }
+*/
 
 /* ==============
     MOBILE: Main
