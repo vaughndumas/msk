@@ -4,7 +4,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
         <title></title>
         <meta name="description" content="">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="Expires" content="-1">
         <link rel="apple-touch-icon" href="apple-touch-icon.png">
         <link href="css/leaflet.css" rel="stylesheet" type="text/css"/>
         <link href="css/jquery.mobile-1.4.5.min.css" rel="stylesheet" type="text/css"/>
@@ -15,10 +15,31 @@
         <script src="js/vendor/jquery-1.11.2.js"></script>
         <script src="js/vendor/modernizr-2.8.3-respond-1.4.2.min.js"></script>
         <script src="js/jquery.mobile-1.4.5.min.js"></script>
+                <script src="js/main.js"></script>
         <script>
         /*
          * Get the routes
          */
+          $(document).ready(function() {
+             v_url = "http://mlc.local/index.php/ri_sync/get_route_list";
+             $.ajax({
+            type: "GET",
+            url: v_url,
+            dataType: "json"
+            }).done(function(data) {                
+                v_data = data;
+                $.each(v_data, function(index, v_row) {
+                    v_html = "<li><a href='#' class='ui-btn ui-btn-icon-right ui-icon-carat-r'>";
+                    console.log(v_row); 
+                    $.each(v_row, function(v_propname, v_objdata) {
+                        if (v_propname == 'route_name') {
+                            v_html = v_html + v_objdata + "::after</a></li>";
+                        }
+                    });
+                    $("#lv1").append(v_html);
+                });
+            });
+          })
         </script>
     </head>
     <body>
@@ -32,8 +53,6 @@
         <div class="main-container">
             <div class="main wrapper clearfix">
                 <ul id="lv1" data-role="listview">
-                    <li><a href="#">Route 1</a></li>
-                    <li><a href="#">Route 2</a></li>
                 </ul>
                 <a href="#" data-role="button" class="ui-btn" onClick="location.replace('map.html'); return false;" rel="external">Map</a>
             </div> <!-- #main -->
@@ -45,6 +64,6 @@
             </footer>
         </div>
         
-        <script src="js/main.js"></script>
+
     </body>
 </html>
