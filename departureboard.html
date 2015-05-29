@@ -68,28 +68,27 @@ console.log(v_schedule_data);
 
                        $.each(v_schedule_data, function(x_index, x_value) {
                          $("#list_table_01 > tbody:last").append('<tr id="'+x_value.route_id+"_"+(x_value.stop_name).replace(/\ /g, "_")+ '" ts_status="waiting" hardwareid="'+x_value.hardwareid+'"><td>'+x_value.stop_name+'</td><td>'+x_value.arrival_time+'</td><td class="depbrd_skipped">&nbsp;</td></tr>');
-                         setTimeout(function() {check_bus_position(x_value.route_id,x_value.hardwareid,x_value.stop_name,v_ampm);}, 5000);
+                         setTimeout(function() {check_bus_position(x_value.route_id,x_value.hardwareid,x_value.stop_name,v_ampm, v_curdate);}, 5000);
                        });
-                       //$("#div_dep_list").show();
                    });
                 });
                 
                 
             });
             
-            function check_bus_position(x_route_id, x_hardwareid, x_stop_name, x_ampm) {
+            function check_bus_position(x_route_id, x_hardwareid, x_stop_name, x_ampm, x_date) {
                 var v_url = vg_base_url + "/index.php/ri_sync/check_route_stop";
                 $(function() {
                     $.ajax({
                         url:  v_url,
                         type: "POST",
-                        data: {x_stop_name: x_stop_name, x_hardwareid:x_hardwareid, x_route_id: x_route_id, x_ampm: x_ampm, x_start_date:$("#x_start_date").val() }
+                        data: {x_stop_name: x_stop_name, x_hardwareid:x_hardwareid, x_route_id: x_route_id, x_ampm: x_ampm, x_start_date: x_date }
                     })
                     .done(function(x_data) {
                         v_return = x_data;
                         //console.log(x_route_id + ":" + x_hardwareid + ":" + x_stop_name + ":" + x_ampm + ":" + ":" + $("#x_start_date").val() + ":" + v_return);
                         if (v_return === "0") {
-                            setTimeout('check_bus_position('+x_route_id+','+x_hardwareid+',"'+x_stop_name+'","' + x_ampm + '")', 30000);
+                            setTimeout(function() {check_bus_position(x_route_id,x_hardwareid,x_stop_name,x_ampm, x_date);}, 30000);
                         } else {
                             v_tmpid = x_route_id+"_"+(x_stop_name).replace(/\ /g, "_");
                             $("#" + v_tmpid).attr("ts_status", "reached");
