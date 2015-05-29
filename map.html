@@ -24,6 +24,7 @@
         var vg_bottomleft = [];
         vg_bottomleft['lat'] = 180;
         vg_bottomleft['lon'] = 180;
+        vg_vehicleMarker = 0;
         
         function show_position(x_start, x_elements, x_map) {
             v_vehicleMarker = L.marker([vg_positions[x_start][0], vg_positions[x_start][1]], {icon: vg_positions[x_start][2]}).addTo(x_map);
@@ -35,7 +36,7 @@
         }
         
         function update_pos(x_vehicle, x_map, x_lat, x_lon) {
-          //v_tmpIcon = L.divIcon({className: 'my-div-icon'});
+          vg_map.removeLayer(vg_vehicleMarker);
           v_datacount = 0;
           var v_url = vg_base_url + "/index.php/ri_sync/get_last_positions";
               $.ajax({
@@ -66,8 +67,8 @@
                   vg_prev_positions.length = 0;
                   
                   map.setView([v_lat, v_lon], 14);
-                  v_vehicleMarker = L.marker([v_lat, v_lon]).addTo(map);
-                  vg_prev_positions.push(v_vehicleMarker);
+                  vg_vehicleMarker = L.marker([v_lat, v_lon]).addTo(map);
+                  vg_prev_positions.push(vg_vehicleMarker);
                   setTimeout(function() {update_pos(x_vehicle, x_map, v_lat, v_lon);}, 30000);
               })
               ; 
@@ -140,11 +141,11 @@
                     id: 'examples.map-i875mjb7'
             }).addTo(map);
             var myIcon = L.divIcon({className: 'my-div-icon'});
-            v_vehicleMarker = L.marker([v_lat, v_lon]).addTo(map).bindPopup('Ignition status: ON');
-            vg_prev_positions.push(v_vehicleMarker);
+            vg_vehicleMarker = L.marker([v_lat, v_lon]).addTo(map).bindPopup('Ignition status: ON');
+            vg_prev_positions.push(vg_vehicleMarker);
             x_vehicle = localStorage.getItem("x_hardwareid");
-            update_pos(x_vehicle, map, v_lat, v_lon)
-            setTimeout(function() {update_pos(x_vehicle, map, v_lat, v_lon);}, 1);
+            update_pos(x_vehicle, map, v_lat, v_lon);
+            //setTimeout(function() {update_pos(x_vehicle, map, v_lat, v_lon);}, 1);
 
 	</script>
         
