@@ -13,6 +13,7 @@
         <script src="js/jquery.mobile-1.4.5.min.js"></script>
         
         <script src="js/vendor/modernizr-2.8.3-respond-1.4.2.min.js"></script>
+        <script src="js/main.js"></script>
         <script>
         var vg_map = null;
         var vg_positions = [];
@@ -24,21 +25,6 @@
         vg_bottomleft['lat'] = 180;
         vg_bottomleft['lon'] = 180;
         
-        function update_pos2(x_vehicle, x_map, x_vehiclemarker, x_lat, x_lon) {
-          update_pos(x_vehicle, x_map, x_vehiclemarker, x_lat, x_lon);
-        }
-        
-        var fitToBounds = function (x_map) {
-             //getting bound of tile 256X256 pixel
-            var maxLat = x_map.unproject(new L.Point(0,0)).lat; 
-            var minLat = x_map.unproject(new L.Point(0,256)).lat;
-            var maxLng = x_map.unproject(new L.Point(256,0)).lng;
-            var minLng = x_map.unproject(new L.Point(256,256)).lng;
-            var southWest = new L.LatLng(minLat, minLng);
-            var northEast = new L.LatLng(maxLat, maxLng);
-            x_map.fitBounds(new L.LatLngBounds(southWest, northEast));
-        };
-        
         function show_position(x_start, x_elements, x_map) {
             v_vehicleMarker = L.marker([vg_positions[x_start][0], vg_positions[x_start][1]], {icon: vg_positions[x_start][2]}).addTo(x_map);
             vg_prev_positions.push(v_vehicleMarker);
@@ -49,10 +35,11 @@
         }
         
         function update_pos(x_vehicle, x_map, x_lat, x_lon) {
+          //v_tmpIcon = L.divIcon({className: 'my-div-icon'});
           v_datacount = 0;
-          var v_url = vg_base_url + "/index.php/ri_sync/get_last_position";
+          var v_url = vg_base_url + "/index.php/ri_sync/get_last_positions";
               $.ajax({
-                 type: "GET",
+                 type: "POST",
                  url: v_url,
                  data: {x_hardwareid: x_vehicle},
                  dataType: "json"
@@ -64,38 +51,26 @@
                       v_lat = 0;
                       v_lon = 0;
                       $.each(v_row, function(v_propname, v_objdata) {
-                          if (v_propname == 'latitude')
+                          if (v_propname == 'lat')
                               v_lat = v_objdata;
-                          if (v_propname == 'longitude')
+                          if (v_propname == 'long')
                               v_lon = v_objdata;
                           if (v_propname == 'icon')
                               v_icon = fi_icons[v_objdata];
                       });
                       vg_positions.push([v_lat, v_lon, v_icon]);
                   });
-                  $.each(vg_prev_positions, function(index, v_row) {
-                      x_map.removeLayer(v_row);
-                  });
+//                  $.each(vg_prev_positions, function(index, v_row) {
+//                      x_map.removeLayer(v_row);
+//                  });
                   vg_prev_positions.length = 0;
-                  if (vg_positions.length > 0) {
-                    for (v_counter = 0; v_counter < vg_positions.length; v_counter ++) {
-                        if (Number(vg_positions[v_counter][0]) > vg_topright['lat'])   vg_topright['lat'] = Number(vg_positions[v_counter][0]);
-                        if (Number(vg_positions[v_counter][0]) < vg_bottomleft['lat']) vg_bottomleft['lat'] = Number(vg_positions[v_counter][0]);
-                        if (Number(vg_positions[v_counter][1]) > vg_topright['lon'])   vg_topright['lon'] = Number(vg_positions[v_counter][1]);
-                        if (Number(vg_positions[v_counter][1]) < vg_bottomleft['lon']) vg_bottomleft['lon'] = Number(vg_positions[v_counter][1]);
-                    }
-                    var southWest = L.latLng(vg_bottomleft['lat'], vg_bottomleft['lon']),
-                        northEast = L.latLng(vg_topright['lat'], vg_topright['lon']),
-                        bounds = L.latLngBounds(southWest, northEast);
-                    x_map.fitBounds(bounds);
-                    show_position(0, vg_positions.length, x_map);
-                  }
+                  
+                  map.setView([v_lat, v_lon], 14);
+                  v_vehicleMarker = L.marker([v_lat, v_lon]).addTo(map);
+                  vg_prev_positions.push(v_vehicleMarker);
+                  setTimeout(function() {update_pos(x_vehicle, x_map, v_lat, v_lon);}, 30000);
               })
               ; 
-              if (v_datacount == 0) {
-                v_vehicleMarker = L.marker([x_lat, x_lon]).addTo(x_map);
-                vg_prev_positions.push(v_vehicleMarker);
-              }
         }
         
         </script>
@@ -109,6 +84,13 @@
 		html, body {
 			height: 100%;
 		}
+                .leaflet-map-pane {
+    z-index: 2 !important;
+}
+
+.leaflet-google-layer {
+    z-index: 1 !important;
+}
 	</style>
         <script>
             
@@ -161,8 +143,8 @@
             v_vehicleMarker = L.marker([v_lat, v_lon]).addTo(map).bindPopup('Ignition status: ON');
             vg_prev_positions.push(v_vehicleMarker);
             x_vehicle = localStorage.getItem("x_hardwareid");
-
-            setTimeout(function() {update_pos(x_vehicle, map, v_lat, v_lon);}, 10);
+            update_pos(x_vehicle, map, v_lat, v_lon)
+            //setTimeout(function() {update_pos(x_vehicle, map, v_lat, v_lon);}, 1);
 
 	</script>
         
