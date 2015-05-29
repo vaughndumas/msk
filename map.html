@@ -54,7 +54,7 @@
               $.ajax({
                  type: "GET",
                  url: v_url,
-                 data: {x_hardwareid v_vehicle}
+                 data: {x_hardwareid: x_vehicle},
                  dataType: "json"
               }).done(function(data) {
                   v_data = data;
@@ -93,7 +93,7 @@
               })
               ; 
               if (v_datacount == 0) {
-                v_vehicleMarker = L.marker([<?php echo $x_last_pos['latitude']; ?>, <?php echo $x_last_pos['longitude']; ?>]).addTo(x_map);
+                v_vehicleMarker = L.marker([x_lat, x_lon]).addTo(x_map);
                 vg_prev_positions.push(v_vehicleMarker);
               }
         }
@@ -137,18 +137,18 @@
             v_lon = 149.1451389;
             v_zoom = 14;
             if (!vg_map) {
-                var map = L.map('map').setView([v_lat,v_lon], 10);
+                var map = L.map('map').setView([v_lat,v_lon], v_zoom);
                 vg_map = map;
             } else {
                 map = vg_map;
             }
-            if (x_orig == 1) {
-                $.each(vg_prev_positions, function(index, v_row) {
-                    map.removeLayer(v_row);
-                });
-                vg_prev_positions.length = 0;
-            }
-            var map = L.map('map').setView([v_lat,v_lon], v_zoom);
+//            if (x_orig == 1) {
+//                $.each(vg_prev_positions, function(index, v_row) {
+//                    map.removeLayer(v_row);
+//                });
+//                vg_prev_positions.length = 0;
+//            }
+            //var map = L.map('map').setView([v_lat,v_lon], v_zoom);
 
             var v_vehicleLayer = L.tileLayer('https://{s}.tiles.mapbox.com/v3/{id}/{z}/{x}/{y}.png', {
                     maxZoom: 18,
@@ -160,6 +160,7 @@
             var myIcon = L.divIcon({className: 'my-div-icon'});
             v_vehicleMarker = L.marker([v_lat, v_lon]).addTo(map).bindPopup('Ignition status: ON');
             vg_prev_positions.push(v_vehicleMarker);
+            x_vehicle = localStorage.getItem("x_hardwareid");
 
             setTimeout(function() {update_pos(x_vehicle, map, v_lat, v_lon);}, 10);
 

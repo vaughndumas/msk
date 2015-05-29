@@ -17,10 +17,11 @@
         <script src="js/jquery.mobile-1.4.5.min.js"></script>
         <script src="js/main.js"></script>
         <script>
-            function show_dept_board(x_route, x_ampm, x_busid) {
-                localStorage.setItem('x_route', x_route);
-                localStorage.setItem('x_ampm', x_ampm);
-                localStorage.setItem('x_busid', x_busid);
+            function show_dept_board(x_route, x_ampm, x_busid, x_hardwareid) {
+                localStorage.setItem('x_route'     , x_route);
+                localStorage.setItem('x_ampm'      , x_ampm);
+                localStorage.setItem('x_busid'     , x_busid);
+                localStorage.setItem('x_hardwareid', x_hardwareid);
                 location.replace('departureboard.html');
                 return false;
             }
@@ -40,6 +41,7 @@
                     v_ampm = 'AM';
                     v_busid = 0;
                     v_route = 'xx';
+                    v_hardwareid = 1;
                     console.log(v_row); 
                     $.each(v_row, function(v_propname, v_objdata) {
                         switch(v_propname) {
@@ -52,6 +54,9 @@
                             case 'bus_id':
                                 v_busid = v_objdata;
                                 break;
+                            case 'hardwareid':
+                                v_hardwareid = v_objdata;
+                                break;
                         }
                     });
                     v_html = v_html + " onClick='show_dept_board(\"" 
@@ -60,6 +65,8 @@
                                     + v_ampm 
                                     + "\"," 
                                     + v_busid 
+                                    + ","
+                                    + v_hardwareid
                                     + ");'>" + v_route 
                                     + "</a></li>";
                     $("#lv1").append(v_html);
