@@ -2,8 +2,6 @@
 <head>
 	<title>MySkoolBus</title>
 	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-        <meta http-equiv="Pragma" content="no-cache">
-        <meta http-equiv="Expires" content="-1">
         
         <link href="css/leaflet.css" rel="stylesheet" type="text/css"/>
         <link href="css/jquery.mobile-1.4.5.min.css" rel="stylesheet" type="text/css"/>
@@ -15,6 +13,92 @@
         <script src="js/jquery.mobile-1.4.5.min.js"></script>
         
         <script src="js/vendor/modernizr-2.8.3-respond-1.4.2.min.js"></script>
+        <script>
+        var vg_map = null;
+        var vg_positions = [];
+        var vg_prev_positions = [];
+        var vg_topright = [];
+        vg_topright['lat'] = -180; 
+        vg_topright['lon'] = -180;
+        var vg_bottomleft = [];
+        vg_bottomleft['lat'] = 180;
+        vg_bottomleft['lon'] = 180;
+        
+        function update_pos2(x_vehicle, x_map, x_vehiclemarker, x_lat, x_lon) {
+          update_pos(x_vehicle, x_map, x_vehiclemarker, x_lat, x_lon);
+        }
+        
+        var fitToBounds = function (x_map) {
+             //getting bound of tile 256X256 pixel
+            var maxLat = x_map.unproject(new L.Point(0,0)).lat; 
+            var minLat = x_map.unproject(new L.Point(0,256)).lat;
+            var maxLng = x_map.unproject(new L.Point(256,0)).lng;
+            var minLng = x_map.unproject(new L.Point(256,256)).lng;
+            var southWest = new L.LatLng(minLat, minLng);
+            var northEast = new L.LatLng(maxLat, maxLng);
+            x_map.fitBounds(new L.LatLngBounds(southWest, northEast));
+        };
+        
+        function show_position(x_start, x_elements, x_map) {
+            v_vehicleMarker = L.marker([vg_positions[x_start][0], vg_positions[x_start][1]], {icon: vg_positions[x_start][2]}).addTo(x_map);
+            vg_prev_positions.push(v_vehicleMarker);
+            x_start++;
+            if (x_start < x_elements) {
+                setTimeout(function() {show_position(x_start, x_elements, x_map);}, 250);
+            } 
+        }
+        
+        function update_pos(x_vehicle, x_map, x_lat, x_lon) {
+          v_datacount = 0;
+          var v_url = vg_base_url + "/index.php/ri_sync/get_last_position";
+              $.ajax({
+                 type: "GET",
+                 url: v_url,
+                 data: {x_hardwareid v_vehicle}
+                 dataType: "json"
+              }).done(function(data) {
+                  v_data = data;
+                  vg_positions.length = 0;
+                  $.each(v_data, function(index, v_row) {
+                      v_datacount ++;
+                      v_lat = 0;
+                      v_lon = 0;
+                      $.each(v_row, function(v_propname, v_objdata) {
+                          if (v_propname == 'latitude')
+                              v_lat = v_objdata;
+                          if (v_propname == 'longitude')
+                              v_lon = v_objdata;
+                          if (v_propname == 'icon')
+                              v_icon = fi_icons[v_objdata];
+                      });
+                      vg_positions.push([v_lat, v_lon, v_icon]);
+                  });
+                  $.each(vg_prev_positions, function(index, v_row) {
+                      x_map.removeLayer(v_row);
+                  });
+                  vg_prev_positions.length = 0;
+                  if (vg_positions.length > 0) {
+                    for (v_counter = 0; v_counter < vg_positions.length; v_counter ++) {
+                        if (Number(vg_positions[v_counter][0]) > vg_topright['lat'])   vg_topright['lat'] = Number(vg_positions[v_counter][0]);
+                        if (Number(vg_positions[v_counter][0]) < vg_bottomleft['lat']) vg_bottomleft['lat'] = Number(vg_positions[v_counter][0]);
+                        if (Number(vg_positions[v_counter][1]) > vg_topright['lon'])   vg_topright['lon'] = Number(vg_positions[v_counter][1]);
+                        if (Number(vg_positions[v_counter][1]) < vg_bottomleft['lon']) vg_bottomleft['lon'] = Number(vg_positions[v_counter][1]);
+                    }
+                    var southWest = L.latLng(vg_bottomleft['lat'], vg_bottomleft['lon']),
+                        northEast = L.latLng(vg_topright['lat'], vg_topright['lon']),
+                        bounds = L.latLngBounds(southWest, northEast);
+                    x_map.fitBounds(bounds);
+                    show_position(0, vg_positions.length, x_map);
+                  }
+              })
+              ; 
+              if (v_datacount == 0) {
+                v_vehicleMarker = L.marker([<?php echo $x_last_pos['latitude']; ?>, <?php echo $x_last_pos['longitude']; ?>]).addTo(x_map);
+                vg_prev_positions.push(v_vehicleMarker);
+              }
+        }
+        
+        </script>
 
 	<style>
             
@@ -25,9 +109,11 @@
 		html, body {
 			height: 100%;
 		}
-            
-
 	</style>
+        <script>
+            
+        </script>
+
 </head>
 <body>
 <script>//window.jQuery || document.write('<script src="js/jquery.mobile-1.4.5.min.js"><\/script>')</script>
@@ -45,24 +131,38 @@
         </div>
 
 
-	<script>
+        <script>
+            
             v_lat = -35.2914399;
             v_lon = 149.1451389;
-            v_zoom = 13;
-		var map = L.map('map').setView([v_lat,v_lon], v_zoom);
+            v_zoom = 14;
+            if (!vg_map) {
+                var map = L.map('map').setView([v_lat,v_lon], 10);
+                vg_map = map;
+            } else {
+                map = vg_map;
+            }
+            if (x_orig == 1) {
+                $.each(vg_prev_positions, function(index, v_row) {
+                    map.removeLayer(v_row);
+                });
+                vg_prev_positions.length = 0;
+            }
+            var map = L.map('map').setView([v_lat,v_lon], v_zoom);
 
-		L.tileLayer('https://{s}.tiles.mapbox.com/v3/{id}/{z}/{x}/{y}.png', {
-			maxZoom: 13,
-			attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, ' +
-				'<a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, ' +
-				'Imagery © <a href="http://mapbox.com">Mapbox</a>',
-			id: 'examples.map-i875mjb7'
-		}).addTo(map);
+            var v_vehicleLayer = L.tileLayer('https://{s}.tiles.mapbox.com/v3/{id}/{z}/{x}/{y}.png', {
+                    maxZoom: 18,
+                    attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, ' +
+                            '<a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, ' +
+                            'Imagery © <a href="http://mapbox.com">Mapbox</a>',
+                    id: 'examples.map-i875mjb7'
+            }).addTo(map);
+            var myIcon = L.divIcon({className: 'my-div-icon'});
+            v_vehicleMarker = L.marker([v_lat, v_lon]).addTo(map).bindPopup('Ignition status: ON');
+            vg_prev_positions.push(v_vehicleMarker);
 
-                L.marker([-35.2914399,149.1451389]).addTo(map);
-                //L.circle([-35.2914399,149.1451389], 5000).addTo(map);
+            setTimeout(function() {update_pos(x_vehicle, map, v_lat, v_lon);}, 10);
 
-		//map.locate({setView: true, maxZoom: v_zoom});
 	</script>
         
         

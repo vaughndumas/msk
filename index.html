@@ -15,13 +15,20 @@
         <script src="js/vendor/jquery-1.11.2.js"></script>
         <script src="js/vendor/modernizr-2.8.3-respond-1.4.2.min.js"></script>
         <script src="js/jquery.mobile-1.4.5.min.js"></script>
-                <script src="js/main.js"></script>
+        <script src="js/main.js"></script>
         <script>
+            function show_dept_board(x_route, x_ampm, x_busid) {
+                localStorage.setItem('x_route', x_route);
+                localStorage.setItem('x_ampm', x_ampm);
+                localStorage.setItem('x_busid', x_busid);
+                location.replace('departureboard.html');
+                return false;
+            }
         /*
          * Get the routes
          */
           $(document).ready(function() {
-             v_url = "http://mlc.local/index.php/ri_sync/get_route_list";
+             v_url = vg_base_url + "/index.php/ri_sync/get_route_list";
              $.ajax({
             type: "GET",
             url: v_url,
@@ -29,13 +36,32 @@
             }).done(function(data) {                
                 v_data = data;
                 $.each(v_data, function(index, v_row) {
-                    v_html = "<li><a href='#' class='ui-btn ui-btn-icon-right ui-icon-carat-r'>";
+                    v_html = "<li><a href='#' class='ui-btn ui-btn-icon-right ui-icon-carat-r'";
+                    v_ampm = 'AM';
+                    v_busid = 0;
+                    v_route = 'xx';
                     console.log(v_row); 
                     $.each(v_row, function(v_propname, v_objdata) {
-                        if (v_propname == 'route_name') {
-                            v_html = v_html + v_objdata + "::after</a></li>";
+                        switch(v_propname) {
+                            case 'route_name':
+                                v_route = v_objdata;
+                                break;
+                            case 'AMPM':
+                                v_ampm = v_objdata;
+                                break;
+                            case 'bus_id':
+                                v_busid = v_objdata;
+                                break;
                         }
                     });
+                    v_html = v_html + " onClick='show_dept_board(\"" 
+                                    + v_route 
+                                    + "\",\"" 
+                                    + v_ampm 
+                                    + "\"," 
+                                    + v_busid 
+                                    + ");'>" + v_route 
+                                    + "</a></li>";
                     $("#lv1").append(v_html);
                 });
             });
