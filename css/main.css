@@ -166,6 +166,7 @@ nav a:hover {
     background: -ms-linear-gradient(left, rgba(24,46,5,1) 0%, rgba(31,59,8,1) 79%, rgba(98,125,77,1) 92%, rgba(98,125,77,1) 100%);
     background: linear-gradient(to right, rgba(24,46,5,1) 0%, rgba(31,59,8,1) 79%, rgba(98,125,77,1) 92%, rgba(98,125,77,1) 100%);
     filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#182e05', endColorstr='#627d4d', GradientType=1 );
+    color: white;
     border-radius: 5px;
 }
 

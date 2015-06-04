@@ -61,9 +61,7 @@
                    })
                    .done(function(v_data) {
                        v_return = v_data;
-                       v_schedule_data = jQuery.parseJSON(v_return);
-console.log(v_schedule_data);
-                       
+                       v_schedule_data = jQuery.parseJSON(v_return);                       
                        v_tmptab.clear().draw();
 
                        $.each(v_schedule_data, function(x_index, x_value) {
