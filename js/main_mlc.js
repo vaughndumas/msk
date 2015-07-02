@@ -1,7 +1,7 @@
-var vg_client = "Demo School";
-var vg_custcode = "DEMO";
+var vg_client = "MLC Sydney";
+var vg_custcode = "MLCS";
 //var vg_base_url = "http://mlc.local";
-var vg_base_url = "http://school.tracking-intelligence.com";
+var vg_base_url = "http://mlc.tracking-intelligence.com";
 var fi_icons = [];
 var icon_north = L.icon({
     iconUrl: '/img/direction/n.png',
