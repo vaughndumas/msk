@@ -25,6 +25,8 @@
         vg_bottomleft['lat'] = 180;
         vg_bottomleft['lon'] = 180;
         vg_vehicleMarker = 0;
+        var vg_lastlat = -35.2914399;
+        var vg_lastlong = 149.1451389;
         
         function show_position(x_start, x_elements, x_map) {
             v_vehicleMarker = L.marker([vg_positions[x_start][0], vg_positions[x_start][1]], {icon: vg_positions[x_start][2]}).addTo(x_map);
@@ -67,9 +69,18 @@
                   vg_prev_positions.length = 0;
                   
                   map.setView([v_lat, v_lon], 14);
+                  vg_lastlat = v_lat;
+                  vg_lastlong = v_lon;
                   vg_vehicleMarker = L.marker([v_lat, v_lon]).addTo(map);
                   vg_prev_positions.push(vg_vehicleMarker);
                   setTimeout(function() {update_pos(x_vehicle, x_map, v_lat, v_lon);}, 30000);
+              })
+              .fail(function() {
+                map.setView([vg_lastlat, vg_lastlong], 14);
+                vg_vehicleMarker = L.marker([vg_lastlat, vg_lastlong]).addTo(map);
+                vg_prev_positions.length = 0;
+                vg_prev_positions.push(vg_vehicleMarker);
+                setTimeout(function() {update_pos(x_vehicle, x_map, vg_lastlat, vg_lastlong);}, 30000);
               })
               ; 
         }
@@ -116,8 +127,8 @@
 
         <script>
             
-            v_lat = -35.2914399;
-            v_lon = 149.1451389;
+            v_lat = vg_lastlat;
+            v_lon = vg_lastlong;
             v_zoom = 14;
             if (!vg_map) {
                 var map = L.map('map').setView([v_lat,v_lon], v_zoom);
