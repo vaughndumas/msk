@@ -2,6 +2,7 @@ var vg_client = "MLC Sydney";
 var vg_custcode = "MLCS";
 //var vg_base_url = "http://mlc.local";
 var vg_base_url = "http://mlc.tracking-intelligence.com";
+var vg_mapbox_token="pk.eyJ1IjoidmF1Z2huZHVtYXMiLCJhIjoiMGI5OWM2NWJjZDcxMjA1Nzc3MDQ4ODE4NjA5N2UxNDkifQ.JxG27h6rKURTY7mhtFrdng";
 var fi_icons = [];
 var icon_north = L.icon({
     iconUrl: '/img/direction/n.png',

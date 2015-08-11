@@ -144,12 +144,12 @@
 //            }
             //var map = L.map('map').setView([v_lat,v_lon], v_zoom);
 
-            var v_vehicleLayer = L.tileLayer('https://{s}.tiles.mapbox.com/v3/{id}/{z}/{x}/{y}.png', {
+            var v_vehicleLayer = L.tileLayer('https://{s}.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token='+vg_mapbox_token, {
                     maxZoom: 18,
                     attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, ' +
                             '<a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, ' +
                             'Imagery © <a href="http://mapbox.com">Mapbox</a>',
-                    id: 'examples.map-i875mjb7'
+                    id: 'mapbox.streets'
             }).addTo(map);
             var myIcon = L.divIcon({className: 'my-div-icon'});
             vg_vehicleMarker = L.marker([v_lat, v_lon]).addTo(map).bindPopup('Ignition status: ON');
