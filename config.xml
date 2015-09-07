@@ -19,7 +19,7 @@
 -->
 <widget xmlns='http://www.w3.org/ns/widgets' id='au.com.trackingsolutions.myskoolbus' version='1.0.0'>
     <name>
-        MySkoolBus
+        myskoolbus
     </name>
     <description>
          Parent application for accessing the MySkoolBus system 
