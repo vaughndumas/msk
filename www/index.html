@@ -17,79 +17,56 @@
         <script src="js/jquery.mobile-1.4.5.min.js"></script>
         <script src="js/main.js"></script>
         <script>
-            function show_dept_board(x_route, x_ampm, x_busid, x_hardwareid) {
-                localStorage.setItem('x_route'     , x_route);
-                localStorage.setItem('x_ampm'      , x_ampm);
-                localStorage.setItem('x_busid'     , x_busid);
-                localStorage.setItem('x_hardwareid', x_hardwareid);
-                location.replace('departureboard.html');
-                return false;
-            }
         /*
          * Get the routes
          */
           $(document).ready(function() {
-             v_url = vg_base_url + "/index.php/ri_sync/get_route_list";
-             $.ajax({
-            type: "GET",
+              vg_user = localStorage.getItem("x_user");
+              console.log(vg_user);
+              vg_passwd = localStorage.getItem("x_passwd");
+              console.log(vg_passwd);
+              if ((vg_user == null) || (vg_passwd == null)) {
+                  return;
+              }
+              $("#x_user").val(vg_user);
+              $("#x_passwd").val(vg_passwd);
+              validateUser();
+          });
+          
+          function validateUser() {
+            v_url = vg_base_url + "/index.php/login/authenticateApp";
+            $.ajax({
+            type: "POST",
             url: v_url,
-            dataType: "json"
+            data: {x_user: $("#x_user").val(), x_passwd: $("#x_passwd").val()}
             }).done(function(data) {                
                 v_data = data;
-                $.each(v_data, function(index, v_row) {
-                    v_html = "<li><a href='#' class='ui-btn ui-btn-icon-right ui-icon-carat-r'";
-                    v_ampm = 'AM';
-                    v_busid = 0;
-                    v_route = 'xx';
-                    v_hardwareid = 1;
-                    console.log(v_row); 
-                    $.each(v_row, function(v_propname, v_objdata) {
-                        switch(v_propname) {
-                            case 'route_name':
-                                v_route = v_objdata;
-                                break;
-                            case 'AMPM':
-                                v_ampm = v_objdata;
-                                break;
-                            case 'bus_id':
-                                v_busid = v_objdata;
-                                break;
-                            case 'hardwareid':
-                                v_hardwareid = v_objdata;
-                                break;
-                        }
-                    });
-                    v_html = v_html + " onClick='show_dept_board(\"" 
-                                    + v_route 
-                                    + "\",\"" 
-                                    + v_ampm 
-                                    + "\"," 
-                                    + v_busid 
-                                    + ","
-                                    + v_hardwareid
-                                    + ");'>" + v_route 
-                                    + "</a></li>";
-                    $("#lv1").append(v_html);
-                });
-                localStorage.setItem("x_hardwareid", v_hardwareid);
+                if (v_data === "0") {
+                  localStorage.setItem("x_user", $("#x_user").val());
+                  localStorage.setItem("x_passwd", $("#x_passwd").val());
+                  location.replace("mainmenu.html");
+                } else {
+                    alert("Invalid user name and password.  Please contact the school.");
+                }
             });
-          })
+          }
         </script>
     </head>
     <body>
         <script>//window.jQuery || document.write('<script src="js/jquery.mobile-1.4.5.min.js"><\/script>')</script>
         <div class="header-container">
             <header class="wrapper clearfix">
-                <h1 class="title">MySkoolBus</h1>
+                <h1 class="title">MySkoolBus Login</h1>
             </header>
         </div>
 
-        <div class="main-container">
-            <div class="main wrapper clearfix">
-                <ul id="lv1" data-role="listview">
-                </ul>
-                <a href="#" data-role="button" class="ui-btn" onClick="location.replace('map.html'); return false;" rel="external">Map</a>
-            </div> <!-- #main -->
+        <div role="main" class="ui-content main-container">
+            <h3>Sign in</h3>
+            <label for="x_user">User name</label>
+            <input type="text" name="x_user" id="x_user" value="">
+            <label for="x_passwd">Password</label>
+            <input type="password" name="x_passwd" id="x_passwd" value="">
+            <a href="#" id="btn-submit" class="ui-btn ui-btn-b ui-corner-all" onClick="validateUser();">Submit</a>
         </div> <!-- #main-container -->
 
         <div class="footer-container">
