@@ -17,19 +17,17 @@
         <script src="js/jquery.mobile-1.4.5.min.js"></script>
         <script src="js/main.js"></script>
         <script>
-            function show_dept_board(x_route, x_ampm, x_busid, x_hardwareid) {
-                localStorage.setItem('x_route'     , x_route);
-                localStorage.setItem('x_ampm'      , x_ampm);
-                localStorage.setItem('x_busid'     , x_busid);
-                localStorage.setItem('x_hardwareid', x_hardwareid);
-                location.replace('departureboard.html');
+            function show_map(x_vehicle_name, x_hardwareid) {
+                localStorage.setItem("x_hardwareid"  , x_hardwareid);
+                localStorage.setItem('x_vehicle_name', x_vehicle_name);
+                location.replace('map.html');
                 return false;
             }
         /*
-         * Get the routes
+         * Get the vehicles
          */
-          $(document).ready(function() {
-             v_url = vg_base_url + "/index.php/ri_sync/get_route_list";
+        $(document).ready(function() {
+             v_url = vg_base_url + "/index.php/ri_sync/get_vehicle_list";
              $.ajax({
             type: "GET",
             url: v_url,
@@ -38,49 +36,40 @@
                 v_data = data;
                 $.each(v_data, function(index, v_row) {
                     v_html = "<li><a href='#' class='ui-btn ui-btn-icon-right ui-icon-carat-r'";
-                    v_ampm = 'AM';
-                    v_busid = 0;
-                    v_route = 'xx';
                     v_hardwareid = 1;
+                    v_vehicle_name = '';
                     console.log(v_row); 
                     $.each(v_row, function(v_propname, v_objdata) {
                         switch(v_propname) {
-                            case 'route_name':
-                                v_route = v_objdata;
-                                break;
-                            case 'AMPM':
-                                v_ampm = v_objdata;
-                                break;
-                            case 'bus_id':
-                                v_busid = v_objdata;
+                            case 'name':
+                                v_vehicle_name = v_objdata;
                                 break;
                             case 'hardwareid':
                                 v_hardwareid = v_objdata;
                                 break;
                         }
                     });
-                    v_html = v_html + " onClick='show_dept_board(\"" 
-                                    + v_route 
-                                    + "\",\"" 
-                                    + v_ampm 
+                    v_html = v_html + " onClick='show_map(\"" 
+                                    + v_vehicle_name 
                                     + "\"," 
-                                    + v_busid 
-                                    + ","
                                     + v_hardwareid
-                                    + ");'>" + v_route 
+                                    + ");'>" + v_vehicle_name 
                                     + "</a></li>";
                     $("#lv1").append(v_html);
                 });
-                localStorage.setItem("x_hardwareid", v_hardwareid);
+                
             });
           })
+          
         </script>
     </head>
     <body>
-        <script>//window.jQuery || document.write('<script src="js/jquery.mobile-1.4.5.min.js"><\/script>')</script>
         <div class="header-container">
             <header class="wrapper clearfix">
                 <h1 class="title">MySkoolBus</h1>
+            </header>
+            <header class="wrapper clearfix">
+                <h3 class="title">Choose a bus</h3>
             </header>
         </div>
 
@@ -88,13 +77,13 @@
             <div class="main wrapper clearfix">
                 <ul id="lv1" data-role="listview">
                 </ul>
-                <a href="#" data-role="button" class="ui-btn" onClick="location.replace('vehicles.html'); return false;" rel="external">Map</a>
+            <a href="#" data-role="button" class="ui-btn" onClick="location.replace('mainmenu.html'); return false;" rel="external">Routes</a>
             </div> <!-- #main -->
         </div> <!-- #main-container -->
 
         <div class="footer-container">
             <footer class="wrapper">
-                <h3>Powered by:  Tracking Solutions</h3>
+                <h4>Powered by:  Tracking Solutions</h4>
             </footer>
         </div>
         

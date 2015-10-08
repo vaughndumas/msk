@@ -113,13 +113,14 @@
 <script>//window.jQuery || document.write('<script src="js/jquery.mobile-1.4.5.min.js"><\/script>')</script>
         <div class="header-container">
             <header class="wrapper clearfix">
-                <h1 class="title">MySkoolBus</h1>
+                <h1 class="title">MySkoolBus - <script>v_vehicle_name = localStorage.getItem("x_vehicle_name");document.write(v_vehicle_name);</script></h1>
             </header>
         </div>
 
         <div class="main-container">
             <div class="main wrapper clearfix">
-                                <div id="map" style="height: 180px" data-role="content"></div>
+                <div id="map" style="height: 180px" data-role="content"></div>
+                <a href="#" style="float: left; width: 50%" data-role="button" class="ui-btn" onClick="location.replace('vehicles.html'); return false;" rel="external">Vehicles</a>
                 <a href="#" data-role="button" class="ui-btn" onClick="location.replace('mainmenu.html'); return false;" rel="external">Routes</a>
             </div>
         </div>

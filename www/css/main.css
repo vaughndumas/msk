@@ -70,7 +70,7 @@ body {
    =================== */
 
 .header-container {
-    border-bottom: 20px solid #e44d26;
+    border-bottom: 10px solid #e44d26;
 }
 
 .footer-container,
@@ -133,6 +133,14 @@ nav a:hover {
     font-size: 2em;
 }
 
+h2 {
+    font-size: 1.7em;
+}
+
+h3 {
+    font-size: 1.2em;
+}
+
 .main aside {
     color: white;
     padding: 0px 5% 10px;
@@ -148,7 +156,7 @@ nav a:hover {
    =============== */
 
 .ie7 .title {
-    padding-top: 20px;
+    padding-top: 10px;
 }
 
 /* ==========================================================================
