@@ -38,6 +38,8 @@
         }
         
         function update_pos(x_vehicle, x_map, x_lat, x_lon) {
+          v_zoom = 14;
+          v_zoom = vg_map.getZoom();
           vg_map.removeLayer(vg_vehicleMarker);
           v_datacount = 0;
           var v_url = vg_base_url + "/index.php/ri_sync/get_last_positions";
@@ -68,7 +70,7 @@
 //                  });
                   vg_prev_positions.length = 0;
                   
-                  map.setView([v_lat, v_lon], 14);
+                  map.setView([v_lat, v_lon], v_zoom);
                   vg_lastlat = v_lat;
                   vg_lastlong = v_lon;
                   vg_vehicleMarker = L.marker([v_lat, v_lon]).addTo(map);
@@ -76,7 +78,7 @@
                   setTimeout(function() {update_pos(x_vehicle, x_map, v_lat, v_lon);}, 30000);
               })
               .fail(function() {
-                map.setView([vg_lastlat, vg_lastlong], 14);
+                map.setView([vg_lastlat, vg_lastlong], v_zoom);
                 vg_vehicleMarker = L.marker([vg_lastlat, vg_lastlong]).addTo(map);
                 vg_prev_positions.length = 0;
                 vg_prev_positions.push(vg_vehicleMarker);
