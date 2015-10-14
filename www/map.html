@@ -25,8 +25,8 @@
         vg_bottomleft['lat'] = 180;
         vg_bottomleft['lon'] = 180;
         vg_vehicleMarker = 0;
-        var vg_lastlat = -35.2914399;
-        var vg_lastlong = 149.1451389;
+        var vg_lastlat = -33.8713445;
+        var vg_lastlong = 151.0989143;
         
         function show_position(x_start, x_elements, x_map) {
             v_vehicleMarker = L.marker([vg_positions[x_start][0], vg_positions[x_start][1]], {icon: vg_positions[x_start][2]}).addTo(x_map);
@@ -78,6 +78,7 @@
                   setTimeout(function() {update_pos(x_vehicle, x_map, v_lat, v_lon);}, 30000);
               })
               .fail(function() {
+                  console.log('Get last position failed');
                 map.setView([vg_lastlat, vg_lastlong], v_zoom);
                 vg_vehicleMarker = L.marker([vg_lastlat, vg_lastlong]).addTo(map);
                 vg_prev_positions.length = 0;
@@ -122,8 +123,8 @@
         <div class="main-container">
             <div class="main wrapper clearfix">
                 <div id="map" style="height: 180px" data-role="content"></div>
-                <a href="#" style="float: left; width: 50%" data-role="button" class="ui-btn" onClick="location.replace('vehicles.html'); return false;" rel="external">Buses</a>
-                <a href="#" data-role="button" class="ui-btn" onClick="location.replace('mainmenu.html'); return false;" rel="external">Routes</a>
+                <a href="#" data-role="button" class="ui-btn" onClick="location.replace('vehicles.html'); return false;" rel="external">Buses</a>
+                <!-- <a href="#" data-role="button" class="ui-btn" onClick="location.replace('mainmenu.html'); return false;" rel="external">Routes</a> -->
             </div>
         </div>
 
@@ -158,6 +159,7 @@
             vg_vehicleMarker = L.marker([v_lat, v_lon]).addTo(map).bindPopup('Ignition status: ON');
             vg_prev_positions.push(vg_vehicleMarker);
             x_vehicle = localStorage.getItem("x_hardwareid");
+console.log("Tracking vehicle: "+x_vehicle);
             update_pos(x_vehicle, map, v_lat, v_lon);
             //setTimeout(function() {update_pos(x_vehicle, map, v_lat, v_lon);}, 1);
 
