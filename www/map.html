@@ -83,7 +83,7 @@
                 vg_vehicleMarker = L.marker([vg_lastlat, vg_lastlong]).addTo(map);
                 vg_prev_positions.length = 0;
                 vg_prev_positions.push(vg_vehicleMarker);
-                setTimeout(function() {update_pos(x_vehicle, x_map, vg_lastlat, vg_lastlong);}, 30000);
+                setTimeout(function() {update_pos(x_vehicle, x_map, vg_lastlat, vg_lastlong);}, 5000);
               })
               ; 
         }
