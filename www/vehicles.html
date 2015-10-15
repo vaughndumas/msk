@@ -32,7 +32,8 @@
              $.ajax({
             type: "GET",
             url: v_url,
-            dataType: "json"
+            dataType: "json",
+            timeout: 2000
             }).done(function(data) {                
                 v_data = data;
                 vg_hardware_list.length = 0;
@@ -105,7 +106,8 @@
                                         + "</a></li>";
                          $("#lv1").append(v_html);
                     });
-            });
+            })
+            ;
           });
           
         </script>
