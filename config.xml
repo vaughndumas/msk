@@ -18,7 +18,7 @@
  under the License.
  resync
 -->
-<widget xmlns='http://www.w3.org/ns/widgets' id='au.com.trackingsolutions.myskoolbus' version='1.0.31'>
+<widget xmlns='http://www.w3.org/ns/widgets' id='au.com.trackingsolutions.myskoolbus' version='1.0.32'>
     <name>
         myskoolbus
     </name>

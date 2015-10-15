@@ -17,6 +17,7 @@
         <script src="js/jquery.mobile-1.4.5.min.js"></script>
         <script src="js/main.js"></script>
         <script>
+            vg_hardware_list = [];
             function show_map(x_vehicle_name, x_hardwareid) {
                 localStorage.setItem("x_hardwareid"  , x_hardwareid);
                 localStorage.setItem('x_vehicle_name', x_vehicle_name);
@@ -34,12 +35,15 @@
             dataType: "json"
             }).done(function(data) {                
                 v_data = data;
+                vg_hardware_list.length = 0;
+                v_count = 0;
                 $.each(v_data, function(index, v_row) {
                     v_html = "<li><a href='#' class='ui-btn ui-btn-icon-right ui-icon-carat-r'";
                     v_hardwareid = 1;
                     v_vehicle_name = '';
-                    console.log(v_row); 
+//                    console.log(v_row); 
                     $.each(v_row, function(v_propname, v_objdata) {
+                        v_count ++;
                         switch(v_propname) {
                             case 'name':
                                 v_vehicle_name = v_objdata;
@@ -49,6 +53,10 @@
                                 break;
                         }
                     });
+                    vg_hardware_list.push(v_hardwareid+"::"+v_vehicle_name);
+                    if (v_count === 1) {
+                        $("#lv1").empty();
+                    }
                     v_html = v_html + " onClick='show_map(\"" 
                                     + v_vehicle_name 
                                     + "\"," 
@@ -57,9 +65,48 @@
                                     + "</a></li>";
                     $("#lv1").append(v_html);
                 });
-                
+                if (v_count > 0) {
+                    localStorage.setItem("x_hardware_list", vg_hardware_list);
+
+                } else {
+                    v_veh_list = localStorage.getItem("x_hardware_list").split(",");
+                    v_count_f = 0;
+                    $.each(v_veh_list, function(v_index, v_row2) {
+                        v_count_f ++;
+                        if (v_count_f === 1) {
+                            $("#lv1").empty();
+                        }
+                        v_html = "<li><a href='#' class='ui-btn ui-btn-icon-right ui-icon-carat-r' ";
+                        v_single_item = v_row2.split("::");
+                        v_html = v_html + " onClick='show_map(\"" 
+                                        + v_single_item[1] 
+                                        + "\"," 
+                                        + v_single_item[0]
+                                        + ");'>" + v_single_item[1] 
+                                        + "</a></li>";
+                                $("#lv1").append(v_html);
+                    });
+                }
+            }).fail(function() {
+                    v_veh_list = localStorage.getItem("x_hardware_list").split(",");
+                    v_count_f = 0;
+                    $.each(v_veh_list, function(v_index, v_row2) {
+                        v_count_f ++;
+                        if (v_count_f === 1) {
+                            $("#lv1").empty();
+                        }
+                        v_html = "<li><a href='#' class='ui-btn ui-btn-icon-right ui-icon-carat-r' ";
+                        v_single_item = v_row2.split("::");
+                        v_html = v_html + " onClick='show_map(\"" 
+                                        + v_single_item[1] 
+                                        + "\"," 
+                                        + v_single_item[0]
+                                        + ");'>" + v_single_item[1] 
+                                        + "</a></li>";
+                         $("#lv1").append(v_html);
+                    });
             });
-          })
+          });
           
         </script>
     </head>
@@ -73,7 +120,7 @@
             </header>
         </div>
 
-        <div class="main-container">
+        <div class="main container">
             <div class="main wrapper clearfix">
                 <ul id="lv1" data-role="listview">
                 </ul>
