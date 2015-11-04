@@ -30,7 +30,7 @@
     </author>
     <access origin='*'/>
     <!-- <content src="http://mysite.com/myapp.html" /> for external pages -->
-	<icon src="icon.png"/>
+	<icon src="www/icon.png"/>
     <content src='index.html'/>
     <!-- Preferences for iOS -->
 	<preference name='deployment-target' value='8.0'/>
