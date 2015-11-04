@@ -78,7 +78,7 @@
                   setTimeout(function() {update_pos(x_vehicle, x_map, v_lat, v_lon);}, 30000);
               })
               .fail(function() {
-//                  console.log('Get last position failed');
+                console.log('Get last position failed');
                 map.setView([vg_lastlat, vg_lastlong], v_zoom);
                 vg_vehicleMarker = L.marker([vg_lastlat, vg_lastlong]).addTo(map);
                 vg_prev_positions.length = 0;
