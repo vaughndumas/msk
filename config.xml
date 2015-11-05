@@ -35,6 +35,7 @@
 	<preference name='target-device' value='universal'/>
 	<icon src="icon.png"/>
 	<icon src="icons/ios/icon.png" width="57" height="57"/>
+	<icon src="icons/ios/icon-120.png" width="120" height="120"/>
 	<preference name='deployment-target' value='8.0'/>
     <preference name='AllowInlineMediaPlayback' value='false'/>
     <preference name='BackupWebStorage' value='cloud'/>
