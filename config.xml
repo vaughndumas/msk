@@ -30,9 +30,11 @@
     </author>
     <access origin='*'/>
     <!-- <content src="http://mysite.com/myapp.html" /> for external pages -->
-	<icon src="www/icon.png"/>
     <content src='index.html'/>
     <!-- Preferences for iOS -->
+	<preference name='target-device' value='universal'/>
+	<icon src="icon.png"/>
+	<icon src="icons/ios/icon.png" width="57" height="57"/>
 	<preference name='deployment-target' value='8.0'/>
     <preference name='AllowInlineMediaPlayback' value='false'/>
     <preference name='BackupWebStorage' value='cloud'/>
