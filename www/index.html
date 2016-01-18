@@ -35,6 +35,7 @@
           
           function validateUser() {
             v_url = vg_base_url + "/index.php/login/authenticateApp";
+alert("About to validate user at "+v_url);
             $.ajax({
             type: "POST",
             url: v_url,
