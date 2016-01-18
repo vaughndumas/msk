@@ -49,6 +49,10 @@ alert("About to validate user at "+v_url);
                 } else {
                     alert("Invalid user name and password.  Please contact the school.");
                 }
+            })
+            .error(function (xhr, ajaxOptions, thrownError) {
+                alert(xhr.status);
+                alert(thrownError);
             });
           }
         </script>
