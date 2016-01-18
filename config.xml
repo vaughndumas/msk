@@ -18,7 +18,7 @@
  under the License.
  resync
 -->
-<widget xmlns='http://www.w3.org/ns/widgets' xmlns:android   = "http://schemas.android.com/apk/res/android" id='au.com.trackingsolutions.myskoolbus' version='1.0.32'>
+<widget xmlns='http://www.w3.org/ns/widgets' xmlns:android   = "http://schemas.android.com/apk/res/android" id='au.com.trackingsolutions.myskoolbus' version='1.0.34'>
     <name>
         myskoolbus
     </name>
